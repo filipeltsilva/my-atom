@@ -3,5 +3,5 @@ Este repositório contém minhas configurações e pacotes utilizados pelo edito
 
 Para configurar seu editor Atom conforme as configurações contidas neste repositório, os comandos abaixo devem ser executados com o Atom fechado.
 
-  cd ~ && rm -rf .atom
-  git clone https://github.com/filipeltsilva/my-atom.git .atom
+    cd ~ && rm -rf .atom
+    git clone https://github.com/filipeltsilva/my-atom.git .atom
