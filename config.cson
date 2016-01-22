@@ -1,0 +1,11 @@
+"*":
+  "atom-alignment": {}
+  "atom-beautify":
+    _analyticsUserId: "57093462-3824-4eef-aa8d-7f6a58fd2302"
+  core: {}
+  editor:
+    invisibles: {}
+  "exception-reporting":
+    userId: "f4c7a0f0-0a77-3569-abff-b0433e1b4218"
+  welcome:
+    showOnStartup: false
