@@ -9,9 +9,15 @@ window.View = require './grunt-runner-view.coffee'
 
 module.exports =
     config:
+        panelStartsHidden:
+            type: 'boolean'
+            default: false
         gruntPaths:
             type: 'array'
             default: []
+        gruntfilePaths:
+            type: 'array'
+            default: ['/Gruntfile', '/gruntfile']
 
     # creates grunt-runner view and starts listening for commands
     activate:(state = {}) ->

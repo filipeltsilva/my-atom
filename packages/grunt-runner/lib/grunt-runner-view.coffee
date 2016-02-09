@@ -18,6 +18,8 @@ module.exports = class ResultsView extends View
     process: null,
     taskList: null,
     tasks: [],
+    cwd: null,
+    failuresLog: [],
 
     originalPaths: process.env.NODE_PATH.split(':'),
 
@@ -41,6 +43,7 @@ module.exports = class ResultsView extends View
         view = @
 
         atom.project.onDidChangePaths -> view.parseGruntFile()
+        atom.workspace.onDidChangeActivePaneItem -> view.parseGruntFile()
 
         @taskList = new ListView state.taskList
         @on 'mousedown', '.grunt-runner-resizer-handle', (e) => @resizeStarted(e)
@@ -52,6 +55,7 @@ module.exports = class ResultsView extends View
         atom.tooltips.add @logbtn,
             title: ""
             keyBindingCommand: 'grunt-runner:toggle-log'
+
         atom.tooltips.add @panelbtn,
             title: ""
             keyBindingCommand: 'grunt-runner:toggle-panel'
@@ -61,9 +65,36 @@ module.exports = class ResultsView extends View
     parseGruntFile:(starting) ->
         @paths = atom.project.getPaths()
 
-        # Assume the "real" paths is the first path.
-        # TODO: Real fix
+        @currentProjectPath = @path
+
+        # use the first path by default
         @path = @paths[0]
+
+        # search @paths for the active project
+        # use the most accurate match first by ordering by path length descending
+        @paths.sort (a, b) ->
+          return b.length - a.length
+
+        @editor = atom.workspace.getActivePaneItem()
+        if !@editor?.buffer
+          # not a file, maybe a settings panel
+          return
+        @file = @editor?.buffer.file
+        @currentFilePath = @file?.path
+        if !@currentFilePath
+          # not a file, maybe a new / default document
+          return
+
+        for @projectPath in @paths
+          # make sure we don't get punched in the face by a similarly named project, add a slash
+          @comparison = @currentFilePath.indexOf "#{@projectPath}/"
+          if @comparison is 0
+            @path = @projectPath
+            break
+
+        if @path == @currentProjectPath
+          # project hasn't changed, nothing to do
+          return
 
         gruntPaths = atom.config.get('grunt-runner.gruntPaths')
         gruntPaths = if Array.isArray gruntPaths then gruntPaths else []
@@ -78,24 +109,34 @@ module.exports = class ResultsView extends View
         if !@path
             @addLine "No project opened."
         else
-            Task.once require.resolve('./parse-config-task'), @path+'/Gruntfile', ({error, tasks})->
+          path = @path
+          @testPaths = atom.config.get('grunt-runner.gruntfilePaths').map (e) -> "#{path}#{e}"
+          Task.once require.resolve('./parse-config-task'), @testPaths[0], ({error, tasks, path}) => @handleTask(view, error, tasks, path, 0, starting)
 
-                if error
-                    # failed to load Gruntfile.js, try gruntfile.js
-                    Task.once require.resolve('./parse-config-task'), @path+'/gruntfile', ({error, tasks})->
-                        
-                        # log error or add panel to workspace
-                        if error
-                            view.addLine "Error loading gruntfile: #{error}", "error"
-                            view.toggleLog()
-                        else
-                            view.addLine "Grunt file parsed, found #{tasks.length} tasks"
-                            view.tasks = tasks
-                            view.togglePanel()
-                else
-                    view.addLine "Grunt file parsed, found #{tasks.length} tasks"
-                    view.tasks = tasks
-                    view.togglePanel()
+    handleTask: (view, error, tasks, path, index, starting) ->
+
+      if index is 0
+        @failuresLog = []
+
+      if error
+          # does not display the log directly, waits until all attempts have failed
+          @failuresLog.push("Error loading gruntfile: #{error} (#{path})")
+
+          if @testPaths[(index + 1)] && error == "Gruntfile not found."
+            Task.once require.resolve('./parse-config-task'), @testPaths[(index + 1)], ({error, tasks, path}) => @handleTask(view, error, tasks, path, (index + 1), starting)
+
+          # all gruntfile possibilities have failed, show all logs
+          if !@testPaths[(index + 1)]
+              for i in [0...(index + 1)]
+                  view.addLine(@failuresLog[i], "error")
+
+              if starting
+                view.toggleLog()
+      else
+          view.addLine "Grunt file parsed, found #{tasks.length} tasks in #{@testPaths[index]}"
+          view.tasks = tasks
+          @cwd = @testPaths[index].replace(/\\/g, '/').split('/').slice(0, -1).join('/')
+          view.togglePanel() unless atom.config.get('grunt-runner.panelStartsHidden') or !starting
 
     startStopAction: ->
         return @toggleTaskList() if @process == null
@@ -129,9 +170,9 @@ module.exports = class ResultsView extends View
     # stops the current process if it is running
     stopProcess:(noMessage) ->
         @addLine 'Grunt task was ended', 'warning' if @process and not @process?.killed and not noMessage
+        @status.attr 'data-status', null if @process and not @process?.killed and not noMessage
         @process?.kill()
         @process = null
-        @status.attr 'data-status', null
         @.setStartStopBtn false
 
     # toggles the visibility of the entire panel
@@ -213,12 +254,12 @@ module.exports = class ResultsView extends View
             @process = new BufferedProcess
                 command: 'grunt'
                 args: [task]
-                options: {cwd: path}
+                options: {cwd: @cwd}
                 stdout: stdout.bind @
                 exit: exit.bind @
         catch e
             # this never gets caught...
-            @addLine "Could not find grunt command. Make sure to set the path in the configuration settings.", "error"
+            @addLine "Could not find grunt command. Make sure to set the path in the configuration settings." + JSON.stringify(e), "error"
             @stopProcess()
 
     resizeStarted: =>
