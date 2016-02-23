@@ -11,7 +11,7 @@
     "package",
     "run"
   ],
-  "version": "0.13.6",
+  "version": "0.14.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kokarn/atom-grunt-runner.git"
@@ -41,16 +41,16 @@
     "url": "https://github.com/kokarn/atom-grunt-runner/issues"
   },
   "homepage": "https://github.com/kokarn/atom-grunt-runner#readme",
-  "_id": "grunt-runner@0.13.6",
-  "_shasum": "1711343f5da7ef0ca14fd6ec233c5b93a7c0ec50",
-  "_resolved": "file:../d-116118-936-ilsaf3/package.tgz",
-  "_from": "../d-116118-936-ilsaf3/package.tgz",
+  "_id": "grunt-runner@0.14.0",
+  "_shasum": "d076e20971bdb8fff5f0c732ccd689e0b41d3363",
+  "_resolved": "file:../d-116123-2400-1yc1qoj/package.tgz",
+  "_from": "../d-116123-2400-1yc1qoj/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
       {
         "name": "atom-space-pen-views",
-        "version": "2.1.1",
+        "version": "2.2.0",
         "path": "node_modules/atom-space-pen-views/lib/main.js"
       },
       {
