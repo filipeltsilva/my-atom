@@ -279,7 +279,7 @@ export default class MinimapElement {
       'minimap.ignoreWhitespacesInTokens': (ignoreWhitespacesInTokens) => {
         this.ignoreWhitespacesInTokens = ignoreWhitespacesInTokens
 
-        this.requestForcedUpdate()
+        if (this.attached) { this.requestForcedUpdate() }
       },
 
       'editor.preferredLineLength': () => {
@@ -765,6 +765,7 @@ export default class MinimapElement {
       this.style.width = this.flexBasis + 'px'
     } else {
       this.style.flexBasis = null
+      this.style.width = null
     }
 
     if (SPEC_MODE) {
