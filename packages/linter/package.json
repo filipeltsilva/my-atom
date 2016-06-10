@@ -4,7 +4,7 @@
   "author": {
     "name": "atom-community"
   },
-  "version": "1.11.6",
+  "version": "1.11.8",
   "description": "A Base Linter with Cow Powers",
   "repository": {
     "type": "git",
@@ -51,10 +51,10 @@
     "url": "https://github.com/atom-community/linter/issues"
   },
   "homepage": "https://github.com/atom-community/linter#readme",
-  "_id": "linter@1.11.6",
-  "_shasum": "dc7e58aaa10204d26104e04d460db06f4f89ad21",
-  "_resolved": "file:../d-116510-2814-1l20hnb/package.tgz",
-  "_from": "../d-116510-2814-1l20hnb/package.tgz",
+  "_id": "linter@1.11.8",
+  "_shasum": "a5dddaebc5e5836dff35d798d5b26efdadab3fe6",
+  "_resolved": "file:../d-116510-4369-obhmhp/package.tgz",
+  "_from": "../d-116510-4369-obhmhp/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [

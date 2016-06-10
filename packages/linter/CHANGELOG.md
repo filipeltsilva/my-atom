@@ -1,3 +1,12 @@
+## 1.11.8
+
+- Remove bubble properly when all errors have been fixed
+- Fix another bug with bubble (#1177)
+
+## 1.11.7
+
+- Show error tooltip on cursor position
+
 ## 1.11.6
 
 - Fix a bug where messages without a range would crash bubble
