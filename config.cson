@@ -9,5 +9,14 @@
     showInvisibles: true
   "exception-reporting":
     userId: "f4c7a0f0-0a77-3569-abff-b0433e1b4218"
+  "linter-jshint":
+    disableWhenNoJshintrcFileInPath: false
+    lintInlineJavaScript: true
+  "one-dark-ui":
+    layoutMode: "Compact"
+  "seti-ui":
+    compactView: true
+    font: "Default Atom Font"
+    themeColor: "Red"
   welcome:
     showOnStartup: false
