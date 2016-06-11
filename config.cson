@@ -14,9 +14,10 @@
     lintInlineJavaScript: true
   "one-dark-ui":
     layoutMode: "Compact"
+  "seti-syntax": {}
   "seti-ui":
     compactView: true
     font: "Default Atom Font"
-    themeColor: "Red"
+    themeColor: "Orange"
   welcome:
     showOnStartup: false
