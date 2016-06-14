@@ -2,7 +2,13 @@
   "atom-alignment": {}
   "atom-beautify":
     _analyticsUserId: "57093462-3824-4eef-aa8d-7f6a58fd2302"
-  core: {}
+  "base16-syntax":
+    scheme: "Codeschool"
+  core:
+    themes: [
+      "one-dark-ui"
+      "base16-syntax"
+    ]
   editor:
     fontSize: 12
     showIndentGuide: true
@@ -14,10 +20,6 @@
     lintInlineJavaScript: true
   "one-dark-ui":
     layoutMode: "Compact"
-  "seti-syntax": {}
-  "seti-ui":
-    compactView: true
-    font: "Default Atom Font"
-    themeColor: "Orange"
+    tabSizing: "Even"
   welcome:
     showOnStartup: false
